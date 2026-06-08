@@ -9,7 +9,8 @@
     "backend": {
       "entrypoint": "backend/api/index.js",
       "routePrefix": "/api",
-      "framework": "other"
+      "builder": "@vercel/node",
+      "runtime": "nodejs20.x"
     }
   }
 }
