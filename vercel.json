@@ -7,10 +7,9 @@
       "framework": "vite"
     },
     "backend": {
-      "entrypoint": "backend/api/index.js",
+      "entrypoint": "backend",
       "routePrefix": "/api",
-      "builder": "@vercel/node",
-      "runtime": "nodejs20.x"
+      "framework": "express"
     }
   }
 }
