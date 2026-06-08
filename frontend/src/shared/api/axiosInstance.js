@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const normalizeApiUrl = (rawUrl) => {
-  if (!rawUrl) return 'http://localhost:5000/api/v1';
+  if (!rawUrl) return '/api/v1';
   const trimmed = rawUrl.trim();
   if (trimmed.startsWith('//')) return `http:${trimmed}`;
   if (trimmed.startsWith(':')) return `http://localhost${trimmed}`;
@@ -10,7 +10,7 @@ const normalizeApiUrl = (rawUrl) => {
   return trimmed;
 };
 
-export const API_BASE_URL = normalizeApiUrl(import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1');
+export const API_BASE_URL = normalizeApiUrl(import.meta.env.VITE_API_URL || '/api/v1');
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,

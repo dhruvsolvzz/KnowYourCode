@@ -1,5 +1,5 @@
 'use strict';
-require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '.env') });
 const app = require('./src/app');
 const { connectDB } = require('./src/shared/database/connection');
 const config = require('./src/shared/config');
