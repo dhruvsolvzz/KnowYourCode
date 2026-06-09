@@ -25,7 +25,7 @@ app.use(cors(corsOptions));
 
 // ─── Body Parsing ─────────────────────────────────────────────────────────────
 // NOTE: Webhook route uses express.raw() — must be BEFORE express.json()
-app.use('/api/v1/github/webhook', express.raw({ type: 'application/json' }));
+app.use(['/api/v1/github/webhook', '/v1/github/webhook'], express.raw({ type: 'application/json' }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -39,7 +39,7 @@ app.use(requestLogger);
 app.use(passport.initialize());
 
 // ─── Health Check ─────────────────────────────────────────────────────────────
-app.get('/api/v1/health', (req, res) => {
+const healthHandler = (req, res) => {
   res.json({
     success: true,
     data: {
@@ -49,15 +49,20 @@ app.get('/api/v1/health', (req, res) => {
       githubOAuth: isGithubConfigured,
     },
   });
-});
+};
+app.get('/api/v1/health', healthHandler);
+app.get('/v1/health', healthHandler);
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
-app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/repositories', repositoryRoutes);
-app.use('/api/v1/github', githubRoutes);
-app.use('/api/v1/graph', graphRoutes);
-app.use('/api/v1/ai', aiRoutes);
-app.use('/api/v1/summary', summaryRoutes);
+const prefixes = ['/api/v1', '/v1'];
+prefixes.forEach((prefix) => {
+  app.use(`${prefix}/auth`, authRoutes);
+  app.use(`${prefix}/repositories`, repositoryRoutes);
+  app.use(`${prefix}/github`, githubRoutes);
+  app.use(`${prefix}/graph`, graphRoutes);
+  app.use(`${prefix}/ai`, aiRoutes);
+  app.use(`${prefix}/summary`, summaryRoutes);
+});
 
 // ─── 404 Handler ─────────────────────────────────────────────────────────────
 app.use('*', (req, res) => {

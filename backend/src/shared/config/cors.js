@@ -1,5 +1,6 @@
 'use strict';
 const config = require('./index');
+const AppError = require('../utils/AppError');
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -9,10 +10,11 @@ const corsOptions = {
       'http://localhost:3000',
     ];
     // Allow requests with no origin (mobile apps, Postman, curl)
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Also natively support all .vercel.app deployments for frontend previews
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
       callback(null, true);
     } else {
-      callback(new Error(`CORS: Origin ${origin} not allowed`));
+      callback(new AppError(`CORS: Origin ${origin} not allowed`, 403, 'CORS_FORBIDDEN'));
     }
   },
   credentials: true,
